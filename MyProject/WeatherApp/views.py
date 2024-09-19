@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .form import CityForm
 from .models import City
 import requests
@@ -36,3 +36,8 @@ def home(request):
         data.append(city_weather)
     context = {'data': data, 'form': form}    
     return render(request, "weatherapp.html", context)
+
+def delete_city(request, CName):
+    City.objects.get(name=CName).delete()
+    messages.success(request, " "+CName+" Removed Successfully...!!!")
+    return redirect('Home')
