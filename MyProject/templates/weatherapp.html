@@ -3,14 +3,35 @@
      <div class="container-fluid" style="margin-top:60px;margin-bottom:100px">		
           <div class="col-md-offset-4 col-md-3"> 
                <h3 class="page-header text-primary text-center"><span class="fas fa-cloud-sun"></span> Django - Weather Application</h3>
-               <from method="POST">
+
+               {% if messages %}
+               {% for message in messages %}
+                    {% if message.tags == 'error'%}
+                         <div class="alert alert-danger">
+                              {{ message }}
+                         </div>
+                    {% else %}
+                         <div class="alert alert-{{ message.tags }}">
+                              {{ message }}
+                         </div> 
+                    {% endif %}
+               {% endfor %}
+               {% endif %} 
+               
+               
+               <form method="POST">
                     {% csrf_token %}
                     <div class="input-group">
+                         {{form.name}}
                          <span class="input-group-btn">
                               <button class="btn btn-primary" type="sumbit"><span class="fa fa-add"></span> Add City </button>
                          </span>
                     </div>
-               </from>               
+               </form> 
+               
+               {% for city_weather in cities %}
+                   {{city_weather}}
+               {% endfor %}
           </div>         
      </div>
 {% endblock %}
