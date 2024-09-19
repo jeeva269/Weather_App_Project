@@ -16,12 +16,23 @@ def home(request):
                 res = requests.get(url.format(NCity)).json()
                 if res['cod'] == 200:
                     form.save()
-                    messages.success(request, ""+NCity+" Added Successfully...!!!")
+                    messages.success(request, " "+NCity+" Added Successfully...!!!")
                 else:
                     messages.error(request, "City Does Not Exists...!!!")
             else:
                 messages.error(request, "City Already Exists...!!!")            
     form = CityForm()
-    cities=City.objects.all()
-    
-    return render(request, "weatherapp.html", {'cities': cities, 'form': form})
+    cities = City.objects.all()
+    data = []
+    for city in cities:
+        res = requests.get(url.format(city)).json()
+        city_weather = {
+            'city': city,
+            'temperature': res['main']['temp'],
+            'description': res['weather'][0]['description'],
+            'country': res['sys']['country'],
+            'icon': res['weather'][0]['icon'],
+        }
+        data.append(city_weather)
+    context = {'data': data, 'form': form}    
+    return render(request, "weatherapp.html", context)
